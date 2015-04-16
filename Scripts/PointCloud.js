@@ -96,9 +96,9 @@ function ReadFileLUT(filepathIncludingFileName : String) {
         }
         if(line.IndexOf("viz:position") != -1){
         	ind ++;
-        	var x =  parseFloat(line.Split('"'[0])[1]) / 100.0;
-        	var y =  parseFloat(line.Split('"'[0])[3]) / 100.0;
-        	var z =  parseFloat(line.Split('"'[0])[5]) / 100.0;
+        	var x =  parseFloat(line.Split('"'[0])[1]) / 500.0;
+        	var y =  parseFloat(line.Split('"'[0])[3]) / 500.0;
+        	var z =  parseFloat(line.Split('"'[0])[5]) / 500.0;
         	nodeLookup[id] = new Vector3(x,y,z);
         	uniquePoints[ind] = nodeLookup[id];
         	idList[ind] = id;
