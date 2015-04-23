@@ -1,5 +1,8 @@
 ﻿//import UnityEngine;
-import XMLParser;
+#pragma strict
+
+
+import System.Collections.Generic; 
 import System.IO;
 
 
@@ -17,7 +20,7 @@ static var mesh: Mesh;
 static var positionLookup = new Hashtable();
 static var colorLookup = new Hashtable();
 static var neighborLookup = new Hashtable();
-static var selectedIndices = new Array();
+static var selectedIndices : List.<int>;
 static var opacity = 0.1;
 var numPoints: int = 60000;
 var start = 0;
@@ -44,7 +47,6 @@ function CreateMesh() {
 	mesh.vertices = points;
 	mesh.colors = colors;
 	mesh.SetIndices(indices, MeshTopology.Lines,0);
-	Debug.Log (colorLookup["1463"] * 256);
 	
 }
 
@@ -81,7 +83,7 @@ function Update(){
 }
 
 function ReadFileLUT(filepathIncludingFileName : String) {
-    sr = new File.OpenText(filepathIncludingFileName);
+    var sr = new File.OpenText(filepathIncludingFileName);
     var fileContents = sr.ReadToEnd();
     sr.Close();
     var nodeLookup = new Hashtable();
@@ -119,21 +121,29 @@ function ReadFileLUT(filepathIncludingFileName : String) {
 }
 
 function addNeighbor(lookup : Hashtable, source : String, target : String, index : int){
+	
 	if(lookup[source]){
-		lookup[source]["indices"].push(index);
-		lookup[source]["neighbors"].push(target);
+		var h : Hashtable = lookup[source];
+		var a : List.<String> = h["indices"];
+		var b : List.<String> = h["neighbors"];
+		
+		a.Add(index.ToString());
+		b.Add(target);
 	}
 	else{
 		lookup[source] = new Hashtable();
-		lookup[source]["indices"] = new Array();
-		lookup[source]["neighbors"] = new Array();
-		lookup[source]["indices"].push(index);
-		lookup[source]["neighbors"].push(target);
+		var localHash : Hashtable = lookup[source];
+		var aNew : List.<String> = new List.<String>();
+		var bNew : List.<String> = new List.<String>();
+		aNew.Add(index.ToString());
+		bNew.Add(target);
+		localHash["indices"] = aNew;
+		localHash["neighbors"] = bNew;
 	}	
 }
 
 function ReadFileEdges(filepathIncludingFileName : String){
-	sr = new File.OpenText(filepathIncludingFileName);
+	var sr = new File.OpenText(filepathIncludingFileName);
     var fileContents = sr.ReadToEnd();
     sr.Close();
     var nodeLookup = new Array();
