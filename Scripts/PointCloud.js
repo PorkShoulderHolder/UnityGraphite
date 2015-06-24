@@ -10,8 +10,8 @@ import System.IO;
 @script RequireComponent(MeshRenderer);
 
 static var kdtree : KDTree;
-static var uniquePoints : Vector3[] =  new Vector3[11984];
-static var idList : String[] =  new String[11984];
+static var uniquePoints : Vector3[] =  new Vector3[12835];
+static var idList : String[] =  new String[12835];
 
  
 
@@ -83,9 +83,9 @@ function Update(){
 }
 
 function ReadFileLUT(filepathIncludingFileName : String) {
-    var sr = new File.OpenText(filepathIncludingFileName);
-    var fileContents = sr.ReadToEnd();
-    sr.Close();
+
+    var txt : TextAsset = Resources.Load("apps", typeof(TextAsset));
+    var fileContents = txt.text;
     var nodeLookup = new Hashtable();
     
     var id = "sent";
@@ -143,9 +143,8 @@ function addNeighbor(lookup : Hashtable, source : String, target : String, index
 }
 
 function ReadFileEdges(filepathIncludingFileName : String){
-	var sr = new File.OpenText(filepathIncludingFileName);
-    var fileContents = sr.ReadToEnd();
-    sr.Close();
+	var txt : TextAsset = Resources.Load("apps", typeof(TextAsset));
+    var fileContents = txt.text;
     var nodeLookup = new Array();
     var id = "sent";
     var lines = fileContents.Split("\n"[0]);
@@ -154,10 +153,10 @@ function ReadFileEdges(filepathIncludingFileName : String){
 	var i = 0;
     for(line in lines){
       
-        if(line.IndexOf("edge source") != -1){
+        if(line.IndexOf("source=") != -1){
         	
-        	var source =  line.Split('"'[0])[1];
-        	var target =  line.Split('"'[0])[3];
+        	var source =  line.Split('"'[0])[3];
+        	var target =  line.Split('"'[0])[5];
         	
         	tempColors.push(colorLookup[source]);
         	tempColors.push(colorLookup[target]);
@@ -187,6 +186,6 @@ function ReadFileEdges(filepathIncludingFileName : String){
 }
 
 function ParseGexf(){
-	positionLookup = ReadFileLUT("Untitled.gexf");
-	return ReadFileEdges("Untitled.gexf");
+	positionLookup = ReadFileLUT("Assets/apps.gexf");
+	return ReadFileEdges("Assets/apps.gexf");
 }
